@@ -1,10 +1,16 @@
-const WEBHOOK_URL =
-  "https://n8n.srv804235.hstgr.cloud/webhook/7f5b52e1-8acd-4ffa-b216-a884b2c886d9";
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
 export async function generateTryOn(
   personImage: File,
   clothingImage: File
 ): Promise<string> {
+  // Client-side validation
+  for (const file of [personImage, clothingImage]) {
+    if (file.size > MAX_FILE_SIZE) {
+      throw new Error(`File "${file.name}" exceeds the 10 MB size limit.`);
+    }
+  }
+
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 120_000);
 
@@ -13,14 +19,17 @@ export async function generateTryOn(
     formData.append("image1", personImage);
     formData.append("image2", clothingImage);
 
-    const response = await fetch(WEBHOOK_URL, {
+    const response = await fetch("/api/try-on", {
       method: "POST",
       body: formData,
       signal: controller.signal,
     });
 
     if (!response.ok) {
-      throw new Error(`Server error: ${response.status} ${response.statusText}`);
+      const body = await response.json().catch(() => null);
+      throw new Error(
+        body?.error || `Server error: ${response.status} ${response.statusText}`
+      );
     }
 
     const contentType = response.headers.get("content-type") || "";

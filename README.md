@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Virtual Try-On
+
+AI-powered virtual try-on app styled after the Rinascente luxury e-commerce aesthetic. Upload a person image and a clothing image, and the app generates a merged result via an n8n webhook.
+
+## Tech Stack
+
+- **Next.js 16** (App Router, TypeScript)
+- **Tailwind CSS v4**
+- **Inter** font via `next/font/google`
 
 ## Getting Started
 
-First, run the development server:
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Create a `.env.local` file from the example:
+
+```bash
+cp .env.example .env.local
+```
+
+3. Set your n8n webhook URL in `.env.local`:
+
+```
+N8N_WEBHOOK_URL=https://your-n8n-instance.example.com/webhook/your-webhook-id
+```
+
+4. Start the dev server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to use the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## How It Works
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Upload a **person image** and a **clothing image** (JPEG, PNG, or WebP, max 10 MB each)
+2. Click **Generate Try-On**
+3. The app sends both images through a server-side API route (`/api/try-on`) to the n8n webhook
+4. The AI-generated result is displayed with a download option
 
-## Learn More
+## Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+| Variable | Description |
+|---|---|
+| `N8N_WEBHOOK_URL` | n8n webhook endpoint for image processing |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The webhook URL is kept server-side only and never exposed to the browser.
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Push the repo to GitHub
+2. Import the project on [Vercel](https://vercel.com)
+3. Add `N8N_WEBHOOK_URL` in the Vercel project's Environment Variables settings
+4. Deploy

@@ -8,7 +8,8 @@ interface ImageUploadZoneProps {
   onFileChange: (file: File | null) => void;
 }
 
-const ACCEPTED_TYPES = ["image/jpeg", "image/webp"];
+const ACCEPTED_TYPES = ["image/jpeg", "image/webp", "image/png"];
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
 export default function ImageUploadZone({
   label,
@@ -32,7 +33,11 @@ export default function ImageUploadZone({
   const validateAndSet = useCallback(
     (f: File) => {
       if (!ACCEPTED_TYPES.includes(f.type)) {
-        alert("Only JPEG and WebP images are accepted.");
+        alert("Only JPEG, PNG, and WebP images are accepted.");
+        return;
+      }
+      if (f.size > MAX_FILE_SIZE) {
+        alert("File exceeds the 10 MB size limit.");
         return;
       }
       onFileChange(f);
@@ -114,11 +119,11 @@ export default function ImageUploadZone({
       </svg>
       <p className="mb-1 text-sm font-medium text-black">{label}</p>
       <p className="text-xs text-gray-500">Drag & drop or click to browse</p>
-      <p className="mt-1 text-xs text-gray-400">JPEG, WebP only</p>
+      <p className="mt-1 text-xs text-gray-400">JPEG, PNG, WebP only (max 10 MB)</p>
       <input
         ref={inputRef}
         type="file"
-        accept=".jpeg,.jpg,.webp"
+        accept=".jpeg,.jpg,.png,.webp"
         onChange={handleInputChange}
         className="hidden"
       />
