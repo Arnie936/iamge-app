@@ -2,15 +2,27 @@
 
 import { useState } from "react";
 import ImageUploadZone from "./ImageUploadZone";
+import ClothingGallery from "./ClothingGallery";
 import ResultDisplay from "./ResultDisplay";
 import { generateTryOn } from "@/lib/api";
 
 export default function TryOnSection() {
   const [personImage, setPersonImage] = useState<File | null>(null);
   const [clothingImage, setClothingImage] = useState<File | null>(null);
+  const [selectedGalleryItem, setSelectedGalleryItem] = useState<string | null>(null);
   const [resultImageUrl, setResultImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const handleGallerySelect = (file: File) => {
+    setClothingImage(file);
+    setSelectedGalleryItem(file.name.replace(".png", ""));
+  };
+
+  const handleClothingUpload = (file: File | null) => {
+    setClothingImage(file);
+    setSelectedGalleryItem(null);
+  };
 
   const canGenerate = personImage !== null && clothingImage !== null;
 
@@ -44,7 +56,14 @@ export default function TryOnSection() {
         <ImageUploadZone
           label="Upload Clothing Image"
           file={clothingImage}
-          onFileChange={setClothingImage}
+          onFileChange={handleClothingUpload}
+        />
+      </div>
+
+      <div className="mt-8">
+        <ClothingGallery
+          onSelect={handleGallerySelect}
+          selectedName={selectedGalleryItem}
         />
       </div>
 

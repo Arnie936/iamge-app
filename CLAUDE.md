@@ -39,10 +39,12 @@ Single-page **virtual try-on** app styled after the Rinascente luxury e-commerce
 - **`src/lib/supabase/client.ts`** — browser Supabase client via `createBrowserClient`
 - **`src/lib/supabase/server.ts`** — server Supabase client via `createServerClient` with cookie handling
 - **`src/components/AuthStatus.tsx`** — header auth widget; shows user initials + "SIGN OUT" when logged in, user icon linking to `/login` when logged out; `"use client"`
-- **`src/components/TryOnSection.tsx`** — core interactive component; owns all state (`personImage`, `clothingImage`, `resultImageUrl`, `isLoading`, `error`); marked `"use client"`
+- **`src/components/TryOnSection.tsx`** — core interactive component; owns all state (`personImage`, `clothingImage`, `resultImageUrl`, `isLoading`, `error`); integrates both upload zones and the clothing gallery; marked `"use client"`
+- **`src/components/ClothingGallery.tsx`** — clickable grid of pre-loaded clothing items from `public/clothing/`; fetches the image and converts to `File` on click so it plugs into the existing try-on flow; `"use client"`
 - **`src/components/ImageUploadZone.tsx`** — reusable drag-and-drop upload with preview; accepts JPEG/PNG/WebP (max 10 MB); handles `URL.createObjectURL`/`revokeObjectURL` lifecycle
 - **`src/components/ResultDisplay.tsx`** — renders loading spinner, error state, or result image with download
 - **`src/lib/api.ts`** — client-side helper; POSTs to `/api/try-on` (never directly to n8n); 120s timeout via `AbortController`; client-side file size validation
+- **`public/clothing/`** — pre-loaded clothing images (denim-jacket, red-hat, sunglasses, propeller-cap) served as static assets; used by `ClothingGallery`
 - **Static chrome components** (`TopBanner`, `Header`, `NavBar`, `LoginBanner`, `Breadcrumb`, `PageTitle`, `FilterBar`) — presentational only, no state
 
 ### Authentication & Subscription
